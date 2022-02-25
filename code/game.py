@@ -2,6 +2,7 @@ import random
 from enum import Enum
 import json, os
 import player
+from english_words import english_words_lower_alpha_set
 
 class game:
     """Connects to the next available port.
@@ -138,7 +139,7 @@ class game:
 
         # Correct
         if guess_word.lower() == self.current_anagram["solution"].lower():
-            guess_player.score += 10
+            guess_player.ScorePoints(points=10)
             return True
         else:
             return False
@@ -148,3 +149,26 @@ class game:
         random_index = random.randint(0, len(self.anagrams)-1)
         self.current_anagram = self.anagrams[random_index]
         return self.current_anagram
+
+    def Validate_word(self, guess_word: str, guess_player: player):
+          # Validate user input word
+        ## Validate it is a word
+        result = True
+        isWord = guess_word.lower() in english_words_lower_alpha_set
+
+        # Validate word uses letters found
+        if isWord:
+            # Create list of letters
+            self.choosen_letters = self.current_letters
+            # Itterate over the word
+            for aLetter in guess_word.lower():
+                if aLetter in self.choosen_letters:
+                    self.choosen_letters.remove(aLetter)
+                else:   
+                    return False
+        else:
+            print(f"{guess_player.name} submitted: {guess_word} which is: Not a valid word")
+            return False
+
+        print(f"{guess_player.name} submitted: {guess_word} which is: A valid word")
+        return result

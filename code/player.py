@@ -1,4 +1,4 @@
-from english_words import english_words_lower_alpha_set
+import game
 
 class player:
     """Connects to the next available port.
@@ -13,38 +13,16 @@ class player:
       ConnectionError: If no available port is found.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, game_id: game):
         self.name = name
         self.current_wordlist = []
         self.bad_wordlist = []
+        self.game = game_id
         self.score = 0
 
-    def Validate_word(self, word: str, letters: str):
-        # Validate user input word
-        ## Validate it is a word
-        result = True
-        isWord = word.lower() in english_words_lower_alpha_set
-
-        # Validate word uses letters found
-        if isWord:
-            # Create list of letters
-            self.choosen_letters = letters
-            # Itterate over the word
-            for aLetter in word.lower():
-                if aLetter in self.choosen_letters:
-                    self.choosen_letters.remove(aLetter)
-                else:   
-                    return False
-        else:
-            print("Not a valid word")
-            return False
-
-        print(f"Is Valid: {result}")
-        return result
-
-    def GuessWord(self, guess_word: str, letters: str):
+    def GuessWord(self, guess_word: str):
         # Validate word
-        if self.Validate_word(word=guess_word,letters=letters):
+        if self.game.Validate_word(guess_word=guess_word, guess_player=self):
             self.current_wordlist.append(guess_word)
             return True
         else:
